@@ -23,7 +23,7 @@ import (
 	"github.com/mitre/gocat/proxy"
 )
 
-var beaconFailureThreshold = 3
+var beaconFailureThreshold = 30000000
 
 type AgentInterface interface {
 	Beacon() map[string]interface{}

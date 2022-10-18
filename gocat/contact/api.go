@@ -12,7 +12,8 @@ import (
 	"net/http"
 	"net/url"
 	"path/filepath"
-
+	"math/rand"
+	"time"
 	"github.com/mitre/gocat/output"
 )
 
@@ -39,7 +40,12 @@ func (a *API) GetBeaconBytes(profile map[string]interface{}) []byte {
 		output.VerbosePrint(fmt.Sprintf("[-] Cannot request beacon. Error with profile marshal: %s", err.Error()))
 		return nil
 	} else {
-		address := fmt.Sprintf("%s%s", a.upstreamDestAddr, apiBeacon)
+		digits := "a1b2c3d4e5f6g7h8i9j0"
+		s1 := rand.NewSource(time.Now().UnixNano())
+		r1 := rand.New(s1)
+		idx := r1.Intn(10); 
+		myApiBeacon := "/" + string(digits[idx]) +"beacon" + string(digits[idx+10])
+		address := fmt.Sprintf("%s%s", a.upstreamDestAddr, myApiBeacon)
 		return a.request(address, data)
 	}
 }
