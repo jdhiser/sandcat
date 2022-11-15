@@ -40,11 +40,12 @@ func (a *API) GetBeaconBytes(profile map[string]interface{}) []byte {
 		output.VerbosePrint(fmt.Sprintf("[-] Cannot request beacon. Error with profile marshal: %s", err.Error()))
 		return nil
 	} else {
-		digits := "a1b2c3d4e5f6g7h8i9j0"
+
+                digits := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
 		s1 := rand.NewSource(time.Now().UnixNano())
 		r1 := rand.New(s1)
-		idx := r1.Intn(10); 
-		myApiBeacon := "/" + string(digits[idx]) +"beacon" + string(digits[idx+10])
+		idx := r1.Intn(len(digits)); 
+		myApiBeacon := "/beacon" + string(digits[idx])
 		address := fmt.Sprintf("%s%s", a.upstreamDestAddr, myApiBeacon)
 		return a.request(address, data)
 	}
@@ -113,7 +114,12 @@ func (a *API) SetUpstreamDestAddr(upstreamDestAddr string) {
 
 // SendExecutionResults will send the execution results to the upstream destination.
 func (a *API) SendExecutionResults(profile map[string]interface{}, result map[string]interface{}) {
-	address := fmt.Sprintf("%s%s", a.upstreamDestAddr, apiBeacon)
+        digits := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+	idx := r1.Intn(len(digits)); 
+	myApiBeacon := "/beacon" + string(digits[idx])
+	address := fmt.Sprintf("%s%s", a.upstreamDestAddr, myApiBeacon)
 	profileCopy := make(map[string]interface{})
 	for k,v := range profile {
 		profileCopy[k] = v
